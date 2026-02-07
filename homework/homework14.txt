@@ -1,0 +1,57 @@
+Databases 2025: Домашнее задание 14
+
+Из коллекции customers выяснить из какого города "Sven Ottlieb"
+{
+  filter: {
+    ContactName: 'Sven Ottlieb'
+  },
+  project: {
+    City: 1
+  }
+}
+Ответ: Aachen
+
+Из коллекции ich.US_Adult_Income найти возраст самого взрослого человека
+{
+  sort: {
+    age: -1
+  },
+  limit: 1
+}
+
+Ответ: 90 лет
+
+Из 2 задачи выясните, сколько человек имеют такой же возраст
+
+{
+  filter: {
+    age: 90
+  }
+}
+
+Ответ: 43 человека
+
+Найти _id ObjectId документа, в котором education " IT-career-hub"
+
+{
+  filter: {
+    education: ' IT-career-hub'
+  },
+  project: {
+    _id: 1
+  }
+}
+
+Ответ: 656e13232afc911a8a7ad5e5
+
+Выяснить количество людей в возрасте между 20 и 30 годами
+
+{
+  filter: {
+    age: {
+      $gte: 20,
+      $lt: 30
+    }
+  }
+}
+Ответ: 9389 человек

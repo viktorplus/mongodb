@@ -1,0 +1,150 @@
+1. Из коллекции sample_training.companies: найти компании, основанные в период с 2005 года.
+
+{
+  filter: {
+    founded_year: {
+      $gte: 2005
+    }
+  },
+  sort: {
+    founded_year: 1
+  }
+}
+
+2. Выяснить, сколько из них: 
+
+Стартапы (до 30 сотрудников) 
+
+{
+  filter: {
+    founded_year: {
+      $gte: 2005
+    },
+    number_of_employees: {
+      $lt: 30,
+      $nin: [
+        null,
+        0
+      ],
+      $exists: 1
+    }
+  },
+  project: {
+    name: 1,
+    founded_year: 1,
+    number_of_employees: 1
+  }
+}
+
+Средние компании (30-100 сотрудников) 
+{
+  filter: {
+    founded_year: {
+      $gte: 2005
+    },
+    number_of_employees: {
+      $gte: 30,
+      $lt: 100,
+    }
+  },
+  project: {
+    name: 1,
+    founded_year: 1,
+    number_of_employees: 1
+  }
+}
+
+Крупные компании (100-1000 сотрудников) 
+Очень большие компании (свыше 1000 сотрудников)
+
+* Особенность базы - есть компании с количеством сотрудников 0. Их лучше не учитывать.
+
+3. Составьте список из 5 самых больших поглощений (acquisition) компаний по цене. 
+{
+  sort: {
+    'acquisition.price_amount': -1
+  },
+  project: {
+    name: 1,
+    'acquisition.price_amount': 1
+  },
+  limit: 5
+}
+
+3,1 - самых маленьких 
+
+{
+  filter: {
+    'acquisition.price_amount': {
+      $exists: 1,
+      $ne: null
+    }
+  },
+  sort: {
+    'acquisition.price_amount': 1
+  },
+  project: {
+    name: 1,
+    'acquisition.price_amount': 1
+  },
+  limit: 5
+}
+
+
+4. Составьте список подтверждающих материалов (source_url) и укажите участников сделки ( компания Х купила компанию Z за ******** "USD") 
+
+5. Составьте список компаний, которые привлекли инвестиции. 
+{
+  filter: {
+    total_money_raised: RegExp("B")
+  },
+  sort: {
+    total_money_raised: -1
+  },
+  project: {
+    total_money_raised: 1
+  }
+}
+
+6. Узнайте, сколько их? 
+
+7. Какая компания привлекла больше всех инвестиций?
+
+
+[
+  {
+    $match:
+      /**
+       * query: The query in MQL.
+       */
+      {
+        total_money_raised: RegExp("B")
+      }
+  },
+  {
+    $sort:
+      /**
+       * Provide any number of field/order pairs.
+       */
+      {
+        total_money_raised: -1
+      }
+  },
+  {
+    $project:
+      /**
+       * specifications: The fields to
+       *   include or exclude.
+       */
+      {
+        total_money_raised: 1
+      }
+  },
+  {
+    $limit:
+      /**
+       * Provide the number of documents to limit.
+       */
+      1
+  }
+]
